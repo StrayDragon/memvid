@@ -181,7 +181,11 @@ impl Memvid {
 
         // SKETCH PRE-FILTER: Use sketch track for fast candidate generation if available
         // This dramatically reduces the number of documents sent to BM25/Tantivy
-        if self.has_sketches() && has_text_terms && !request.no_sketch {
+        if self.has_sketches()
+            && has_text_terms
+            && !request.no_sketch
+            && !crate::search::contains_cjk(&request.query)
+        {
             let sketch_start = Instant::now();
             let sketch_options = crate::SketchSearchOptions {
                 // Use relaxed threshold for better recall - BM25 will rerank anyway
