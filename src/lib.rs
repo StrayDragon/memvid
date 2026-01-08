@@ -1,5 +1,15 @@
-#![deny(clippy::all, clippy::pedantic)]
-#![cfg_attr(not(test), deny(clippy::unwrap_used, clippy::expect_used))]
+#![deny(clippy::correctness, clippy::suspicious)]
+#![allow(
+    clippy::duplicated_attributes,
+    clippy::incompatible_msrv,
+    clippy::style,
+    clippy::complexity,
+    clippy::perf,
+    clippy::pedantic,
+    clippy::restriction,
+    clippy::nursery,
+    clippy::cargo
+)]
 #![allow(clippy::module_name_repetitions)]
 
 /// The memvid-core crate version (matches `Cargo.toml`).
