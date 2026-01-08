@@ -4,6 +4,7 @@ use std::ops::Bound;
 
 use super::engine::TantivyEngine;
 use super::util::{combine_should_queries, to_search_value};
+use crate::search::contains_cjk;
 use crate::search::parser::{Expr, FieldTerm, ParsedQuery, Term as ParsedTerm, TextTerm};
 use crate::{MemvidError, Result};
 use tantivy::Term;
@@ -175,7 +176,8 @@ impl QueryPlanner<'_> {
             return Ok(Box::new(AllQuery));
         }
 
-        let tokens = self.engine.analyse_text(word);
+        let mut tokens = self.engine.analyse_text(word);
+        tokens.retain(|token| token.chars().any(|c| c.is_alphanumeric()));
         if tokens.is_empty() {
             // Word produced no tokens after analysis - match all instead of erroring
             // This can happen with punctuation-only or stop-word-only terms
@@ -187,6 +189,18 @@ impl QueryPlanner<'_> {
                 Term::from_field_text(self.engine.content, &tokens[0]),
                 IndexRecordOption::WithFreqsAndPositions,
             )));
+        } else if contains_cjk(word) {
+            for token in &tokens {
+                queries.push(Box::new(TermQuery::new(
+                    Term::from_field_text(self.engine.content, token),
+                    IndexRecordOption::WithFreqsAndPositions,
+                )));
+            }
+            let terms: Vec<Term> = tokens
+                .iter()
+                .map(|token| Term::from_field_text(self.engine.content, token))
+                .collect();
+            queries.push(Box::new(PhraseQuery::new(terms)));
         } else {
             let terms: Vec<Term> = tokens
                 .iter()
