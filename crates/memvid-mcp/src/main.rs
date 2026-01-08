@@ -31,6 +31,7 @@ struct CreateResponse {
 }
 
 #[derive(Debug, Deserialize, JsonSchema)]
+#[schemars(inline)]
 struct PutOptionsInput {
     timestamp: Option<i64>,
     track: Option<String>,
@@ -140,6 +141,7 @@ impl PutOptionsInput {
 
 #[derive(Debug, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
+#[schemars(rename_all = "snake_case", inline)]
 enum PutContentKind {
     Text,
     Base64,
@@ -198,7 +200,7 @@ struct FrameOutput {
     chunk_index: Option<u32>,
     chunk_count: Option<u32>,
     search_text: Option<String>,
-    metadata: Option<serde_json::Value>,
+    metadata: Option<BTreeMap<String, serde_json::Value>>,
 }
 
 #[derive(Debug, Serialize, JsonSchema)]
@@ -267,6 +269,7 @@ struct SearchHitEntityOutput {
 }
 
 #[derive(Debug, Serialize, JsonSchema)]
+#[schemars(inline)]
 struct SearchHitMetadataOutput {
     matches: usize,
     tags: Vec<String>,
@@ -766,10 +769,20 @@ impl SearchHitMetadataOutput {
 impl FrameOutput {
     fn try_from_frame(frame: &Frame) -> Result<Self, String> {
         let metadata = match &frame.metadata {
-            Some(metadata) => Some(
-                serde_json::to_value(metadata)
-                    .map_err(|err| format!("failed to serialize metadata: {err}"))?,
-            ),
+            Some(metadata) => {
+                let value = serde_json::to_value(metadata)
+                    .map_err(|err| format!("failed to serialize metadata: {err}"))?;
+                match value {
+                    serde_json::Value::Object(map) => {
+                        Some(map.into_iter().collect::<BTreeMap<_, _>>())
+                    }
+                    _ => {
+                        return Err(
+                            "frame metadata must serialize to a JSON object".to_string()
+                        );
+                    }
+                }
+            }
             None => None,
         };
         Ok(FrameOutput {
@@ -926,6 +939,56 @@ mod tests {
             .enable_all()
             .build()
             .expect("runtime")
+    }
+
+    fn collect_nullable_without_type(
+        value: &serde_json::Value,
+        path: &str,
+        issues: &mut Vec<String>,
+    ) {
+        match value {
+            serde_json::Value::Object(map) => {
+                if map.contains_key("nullable") && !map.contains_key("type") {
+                    issues.push(path.to_string());
+                }
+                for (key, child) in map {
+                    let next_path = format!("{path}/{key}");
+                    collect_nullable_without_type(child, &next_path, issues);
+                }
+            }
+            serde_json::Value::Array(items) => {
+                for (idx, child) in items.iter().enumerate() {
+                    let next_path = format!("{path}[{idx}]");
+                    collect_nullable_without_type(child, &next_path, issues);
+                }
+            }
+            _ => {}
+        }
+    }
+
+    #[test]
+    fn test_tool_schemas_nullable_have_type() {
+        let tools = MemvidMcp::tool_router().list_all();
+        let mut issues = Vec::new();
+
+        for tool in tools {
+            let input_value = serde_json::Value::Object((*tool.input_schema).clone());
+            collect_nullable_without_type(&input_value, &format!("{}.input", tool.name), &mut issues);
+
+            if let Some(output_schema) = tool.output_schema.as_ref() {
+                let output_value = serde_json::Value::Object((**output_schema).clone());
+                collect_nullable_without_type(
+                    &output_value,
+                    &format!("{}.output", tool.name),
+                    &mut issues,
+                );
+            }
+        }
+
+        assert!(
+            issues.is_empty(),
+            "nullable without type in tool schemas: {issues:?}"
+        );
     }
 
     #[tokio::test]
