@@ -9,6 +9,7 @@
 - `make test` or `cargo test --features lex,pdf_extract`: run the full test suite.
 - `make test-integration`: run integration tests in `tests/`.
 - `make fmt` / `make clippy`: format and lint (clippy runs with `-D warnings`).
+- `just qa`: run local QA mirroring Linux CI (build/test/fmt-check/clippy).
 - `cargo run --example basic_usage` or `make run-example-basic`: run examples.
 
 ## Coding Style & Naming Conventions
