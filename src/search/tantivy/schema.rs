@@ -1,11 +1,69 @@
 use tantivy::Index;
 use tantivy::schema::{IndexRecordOption, NumericOptions, STRING, Schema, TEXT, TextFieldIndexing};
 use tantivy::tokenizer::{
-    Language, LowerCaser, RawTokenizer, SimpleTokenizer, Stemmer, TextAnalyzer,
+    Language, LowerCaser, RawTokenizer, Stemmer, TextAnalyzer, Token, TokenFilter, TokenStream,
+    Tokenizer,
 };
+use tantivy_jieba::JiebaTokenizer;
+
+#[derive(Clone)]
+struct AlnumTokenFilter;
+
+struct AlnumTokenStream<T> {
+    tail: T,
+}
+
+impl TokenFilter for AlnumTokenFilter {
+    type Tokenizer<T: Tokenizer> = AlnumTokenFilterWrapper<T>;
+
+    fn transform<T: Tokenizer>(self, tokenizer: T) -> Self::Tokenizer<T> {
+        AlnumTokenFilterWrapper(tokenizer)
+    }
+}
+
+#[derive(Clone)]
+struct AlnumTokenFilterWrapper<T>(T);
+
+impl<T: Tokenizer> Tokenizer for AlnumTokenFilterWrapper<T> {
+    type TokenStream<'a> = AlnumTokenStream<T::TokenStream<'a>>;
+
+    fn token_stream<'a>(&'a mut self, text: &'a str) -> Self::TokenStream<'a> {
+        AlnumTokenStream {
+            tail: self.0.token_stream(text),
+        }
+    }
+}
+
+impl<T: TokenStream> TokenStream for AlnumTokenStream<T> {
+    fn advance(&mut self) -> bool {
+        while self.tail.advance() {
+            if self
+                .tail
+                .token()
+                .text
+                .chars()
+                .any(|c| c.is_alphanumeric())
+            {
+                return true;
+            }
+        }
+        false
+    }
+
+    fn token(&self) -> &Token {
+        self.tail.token()
+    }
+
+    fn token_mut(&mut self) -> &mut Token {
+        self.tail.token_mut()
+    }
+}
 
 pub(super) fn initialise_tokenizer(index: &Index) {
-    let analyzer = TextAnalyzer::builder(SimpleTokenizer::default())
+    let mut tokenizer = JiebaTokenizer::new();
+    tokenizer.set_ordinal_position_mode(true);
+    let analyzer = TextAnalyzer::builder(tokenizer)
+        .filter(AlnumTokenFilter)
         .filter(LowerCaser)
         .filter(Stemmer::new(Language::English))
         .build();
