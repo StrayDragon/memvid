@@ -2,8 +2,8 @@ use std::collections::BTreeMap;
 use std::num::NonZeroU64;
 use std::path::{Path, PathBuf};
 
-use base64::engine::general_purpose::STANDARD;
 use base64::Engine;
+use base64::engine::general_purpose::STANDARD;
 use memvid_core::{
     CanonicalEncoding, DocMetadata, Frame, FrameRole, FrameStatus, Memvid, PutOptions,
     SearchEngineKind, SearchRequest, TimelineQuery,
@@ -361,10 +361,7 @@ impl MemvidMcp {
             let path = resolve_path(request.path)?;
             let overwrite = request.overwrite.unwrap_or(false);
             if path.exists() && !overwrite {
-                return Err(format!(
-                    "memvid file already exists at {}",
-                    path.display()
-                ));
+                return Err(format!("memvid file already exists at {}", path.display()));
             }
             Memvid::create(&path).map_err(|err| err.to_string())?;
             Ok(CreateResponse {
@@ -502,7 +499,7 @@ impl MemvidMcp {
             let commit = request.commit.unwrap_or(true);
             let payload = match (request.text, request.data_base64) {
                 (Some(_), Some(_)) => {
-                    return Err("provide only one of text or data_base64".to_string())
+                    return Err("provide only one of text or data_base64".to_string());
                 }
                 (Some(text), None) => Some(text.into_bytes()),
                 (None, Some(encoded)) => Some(
@@ -611,8 +608,8 @@ impl MemvidMcp {
         let request = params.0;
         run_blocking(move || {
             let limit = request.limit.unwrap_or(DEFAULT_TIMELINE_LIMIT);
-            let limit = NonZeroU64::new(limit)
-                .ok_or_else(|| "limit must be greater than 0".to_string())?;
+            let limit =
+                NonZeroU64::new(limit).ok_or_else(|| "limit must be greater than 0".to_string())?;
             let reverse = request.reverse.unwrap_or(false);
             let cursor = request
                 .cursor
@@ -672,7 +669,9 @@ impl MemvidMcp {
                 {
                     outputs.truncate(limit.get() as usize);
                     let next_cursor = if outputs.len() == limit.get() as usize {
-                        outputs.last().map(|entry| timeline_cursor_from_entry(entry))
+                        outputs
+                            .last()
+                            .map(|entry| timeline_cursor_from_entry(entry))
                     } else {
                         None
                     };
@@ -687,7 +686,6 @@ impl MemvidMcp {
         .await
         .map(Json)
     }
-
 }
 
 #[tool_handler(router = self.tool_router)]
