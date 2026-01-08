@@ -128,3 +128,7 @@ required-features = ["vec"]
 [[example]]
 name = "text_embed_cache_bench"
 required-features = ["vec"]
+
+[workspace]
+members = ["crates/memvid-mcp"]
+resolver = "2"
