@@ -60,9 +60,7 @@ impl<T: TokenStream> TokenStream for AlnumTokenStream<T> {
 }
 
 pub(super) fn initialise_tokenizer(index: &Index) {
-    let mut tokenizer = JiebaTokenizer::new();
-    tokenizer.set_ordinal_position_mode(true);
-    let analyzer = TextAnalyzer::builder(tokenizer)
+    let analyzer = TextAnalyzer::builder(JiebaTokenizer)
         .filter(AlnumTokenFilter)
         .filter(LowerCaser)
         .filter(Stemmer::new(Language::English))
