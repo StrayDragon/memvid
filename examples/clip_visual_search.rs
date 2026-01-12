@@ -22,12 +22,13 @@
 //!    - macOS: `brew install nicbarker/pdfium/pdfium-mac-arm64` or `pdfium-mac-x64`
 //!    - Linux: Download from https://github.com/nicbarker/pdfium-builds/releases
 
+#[allow(clippy::result_large_err)]
 fn main() -> memvid_core::Result<()> {
     #[cfg(not(feature = "clip"))]
     {
         eprintln!("This example requires the 'clip' feature.");
         eprintln!("Run with: cargo run --example clip_visual_search --features clip");
-        return Ok(());
+        Ok(())
     }
 
     #[cfg(feature = "clip")]

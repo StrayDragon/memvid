@@ -1274,6 +1274,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(deprecated)]
     fn ticket_sequence_enforced() {
         run_serial_test(|| {
             let dir = tempdir().expect("tmp");
@@ -1291,6 +1292,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(deprecated)]
     fn capacity_limit_enforced() {
         run_serial_test(|| {
             let dir = tempdir().expect("tmp");

@@ -60,7 +60,7 @@ fn doctor_rebuilds_tantivy_index() {
             .unwrap();
 
         assert!(
-            results.hits.len() > 0,
+            !results.hits.is_empty(),
             "Search should return results before doctor"
         );
         assert!(results.total_hits >= 10, "Should have at least 10 hits");
@@ -106,7 +106,7 @@ fn doctor_rebuilds_tantivy_index() {
             .unwrap();
 
         assert!(
-            results.hits.len() > 0,
+            !results.hits.is_empty(),
             "Search should return results after doctor rebuild"
         );
         assert_eq!(
@@ -250,7 +250,10 @@ fn open_file_with_tantivy_segments_enables_lex() {
         );
 
         let results = result.unwrap();
-        assert!(results.hits.len() > 0, "Should find the test document");
+        assert!(
+            !results.hits.is_empty(),
+            "Should find the test document"
+        );
     }
 }
 
