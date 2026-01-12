@@ -286,7 +286,10 @@ fn open_file_with_tantivy_segments_enables_lex() {
         );
 
         let results = result.unwrap();
-        assert!(!results.hits.is_empty(), "Should find the test document");
+        assert!(
+            !results.hits.is_empty(),
+            "Should find the test document"
+        );
     }
     // Windows needs extra time for Tantivy to release file handles
     windows_file_handle_delay();

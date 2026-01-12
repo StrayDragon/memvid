@@ -81,7 +81,10 @@ fn search_basic_query() {
         })
         .unwrap();
 
-    assert!(!results.hits.is_empty(), "Should find quantum document");
+    assert!(
+        !results.hits.is_empty(),
+        "Should find quantum document"
+    );
     assert!(
         results.hits[0].uri.contains("quantum"),
         "Top result should be quantum physics"
