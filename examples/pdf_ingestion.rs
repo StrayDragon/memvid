@@ -13,6 +13,7 @@ use tempfile::tempdir;
 
 use memvid_core::{Memvid, PutOptions, Result, SearchRequest};
 
+#[allow(clippy::result_large_err)]
 fn main() -> Result<()> {
     // Get PDF path from args
     let args: Vec<String> = env::args().collect();

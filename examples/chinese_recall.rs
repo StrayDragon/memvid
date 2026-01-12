@@ -374,6 +374,7 @@ fn avg_ms(total_ms: u128, count: usize) -> f64 {
     }
 }
 
+#[allow(clippy::result_large_err)]
 fn main() -> Result<()> {
     let path = PathBuf::from("tmp.mv2");
     if path.exists() {
@@ -627,7 +628,7 @@ fn main() -> Result<()> {
         let mut found_expected = Vec::new();
         let mut missing_expected = Vec::new();
         for &title in case.expected_titles {
-            if hit_titles.iter().any(|hit| *hit == title) {
+            if hit_titles.contains(&title) {
                 found_expected.push(title);
             } else {
                 missing_expected.push(title);
@@ -679,7 +680,7 @@ fn main() -> Result<()> {
         let predicted_expected = case
             .expected_titles
             .iter()
-            .all(|title| predicted_titles.iter().any(|hit| *hit == *title));
+            .all(|title| predicted_titles.contains(title));
         let prediction_check = if expected_total == 0 {
             if predicted_titles.is_empty() {
                 "aligned"
@@ -785,7 +786,7 @@ fn main() -> Result<()> {
         for (rank, hit) in response.hits.iter().take(top_k).enumerate() {
             let title = hit.title.as_deref().unwrap_or("Untitled");
             let score = hit.score.unwrap_or(0.0);
-            let tag = if case.expected_titles.iter().any(|t| *t == title) {
+            let tag = if case.expected_titles.contains(&title) {
                 "EXPECTED"
             } else if matches!(case.expectation, Expectation::ExpectNone) {
                 "UNEXPECTED"

@@ -7,6 +7,7 @@ use tempfile::tempdir;
 
 use memvid_core::{Memvid, PutOptions, Result, SearchRequest, TimelineQuery};
 
+#[allow(clippy::result_large_err)]
 fn main() -> Result<()> {
     // Create a temporary directory for our example
     let dir = tempdir().expect("failed to create temp dir");

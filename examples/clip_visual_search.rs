@@ -22,6 +22,7 @@
 //!    - macOS: `brew install nicbarker/pdfium/pdfium-mac-arm64` or `pdfium-mac-x64`
 //!    - Linux: Download from https://github.com/nicbarker/pdfium-builds/releases
 
+#[allow(clippy::result_large_err)]
 fn main() -> memvid_core::Result<()> {
     #[cfg(not(feature = "clip"))]
     {
