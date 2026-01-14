@@ -37,13 +37,7 @@ impl<T: Tokenizer> Tokenizer for AlnumTokenFilterWrapper<T> {
 impl<T: TokenStream> TokenStream for AlnumTokenStream<T> {
     fn advance(&mut self) -> bool {
         while self.tail.advance() {
-            if self
-                .tail
-                .token()
-                .text
-                .chars()
-                .any(|c| c.is_alphanumeric())
-            {
+            if self.tail.token().text.chars().any(|c| c.is_alphanumeric()) {
                 return true;
             }
         }
