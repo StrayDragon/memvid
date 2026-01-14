@@ -315,7 +315,9 @@ fn build_haystack(doc: &Doc) -> String {
 }
 
 fn contains_any(haystack: &[&'static str], needle: &str) -> bool {
-    haystack.iter().any(|value| value.eq_ignore_ascii_case(needle))
+    haystack
+        .iter()
+        .any(|value| value.eq_ignore_ascii_case(needle))
 }
 
 fn predict_titles<'a>(docs: &'a [Doc], query: &str) -> Vec<&'a str> {
@@ -703,11 +705,7 @@ fn main() -> Result<()> {
         };
         let kind_label = palette.paint(kind.label(), kind_color);
         let expected_label = palette.paint(case.expectation.label(), MAGENTA);
-        println!(
-            "Type: {} | Expectation: {}",
-            kind_label,
-            expected_label
-        );
+        println!("Type: {} | Expectation: {}", kind_label, expected_label);
         if !case.note.is_empty() {
             println!("Note: {}", case.note);
         }
@@ -744,10 +742,7 @@ fn main() -> Result<()> {
             "Result: {} | hits: {} | matched: {} | elapsed: {} ms",
             status_display, response.total_hits, matched_ratio, response.elapsed_ms
         );
-        println!(
-            "Engine: {:?} | top_k: {}",
-            response.engine, top_k
-        );
+        println!("Engine: {:?} | top_k: {}", response.engine, top_k);
         println!(
             "Expected titles: {}",
             if case.expected_titles.is_empty() {
