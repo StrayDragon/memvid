@@ -777,9 +777,7 @@ impl FrameOutput {
                         Some(map.into_iter().collect::<BTreeMap<_, _>>())
                     }
                     _ => {
-                        return Err(
-                            "frame metadata must serialize to a JSON object".to_string()
-                        );
+                        return Err("frame metadata must serialize to a JSON object".to_string());
                     }
                 }
             }
@@ -973,7 +971,11 @@ mod tests {
 
         for tool in tools {
             let input_value = serde_json::Value::Object((*tool.input_schema).clone());
-            collect_nullable_without_type(&input_value, &format!("{}.input", tool.name), &mut issues);
+            collect_nullable_without_type(
+                &input_value,
+                &format!("{}.input", tool.name),
+                &mut issues,
+            );
 
             if let Some(output_schema) = tool.output_schema.as_ref() {
                 let output_value = serde_json::Value::Object((**output_schema).clone());
