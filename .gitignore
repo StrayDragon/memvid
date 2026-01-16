@@ -13,6 +13,7 @@ doc.mv2
 .DS_Store
 *.bk
 .idea
+.nvimlog
 
 
 /target
