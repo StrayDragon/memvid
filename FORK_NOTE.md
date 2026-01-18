@@ -1,5 +1,39 @@
 # Fork Notes
 
+## Rebase: upstream/main (8b9cd22..7851bf2)
+Upstream summary:
+- Hardened replay input/output handling with size limits, sanitization, and error sentinels for large payloads (V-002 fix).
+- Added doctor recovery tests for dry-run planning, bounds checking, vacuum ordering, and footer offset invariants.
+- Disabled Dependabot config.
+
+Fork summary (8b9cd22..a3b2c42):
+- Added memvid MCP server crate, workspace setup, and schema fix.
+- Added OpenSpec scaffolding and commands.
+- Chinese tokenizer experiments + example; Tantivy search adjustments.
+- QA/clippy/fmt/doc/test cleanups and example tweaks.
+- Ignore nvim log noise in .gitignore.
+
+Conflict resolution:
+- None (rebase applied cleanly).
+
+## Rebase: upstream/main (8ad4126..8b9cd22)
+Upstream summary:
+- Bumped crate version to 2.0.134 and adjusted optional deps (ndarray 0.16, rubato 0.15, rand 0.8).
+- Lex search now deduplicates matches by frame_id; added coverage for dedupe behavior.
+- Parallel segment indexing prefers search_text when available (no_raw support).
+- Implicit multi-word queries now default to OR for better recall.
+- Ignored legacy encryption capsule tests due to missing fixture.
+
+Fork summary (8ad4126..450a205):
+- Added memvid MCP server crate, workspace setup, and schema fix.
+- Added OpenSpec scaffolding and commands.
+- Chinese tokenizer experiments + example; Tantivy search adjustments.
+- QA/clippy/fmt/doc/test cleanups and example tweaks.
+- Ignore nvim log noise in .gitignore.
+
+Conflict resolution:
+- None (rebase applied cleanly).
+
 ## Rebase: upstream/main (0d469204..8ad4126)
 Upstream summary:
 - Added install script.
