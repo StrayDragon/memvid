@@ -1,5 +1,38 @@
 # Fork Notes
 
+## Rebase: upstream/main (7851bf2..ee1bebd)
+Upstream summary:
+- Added SIMD acceleration for vector distance calculations (`simd` feature + `simd_benchmark`).
+- Added Japanese README translation and linked it from the main README.
+- Search parser now uses implicit AND for multi-word queries to improve precision.
+
+Fork summary (7851bf2..7755eb6):
+- Added memvid MCP server crate, workspace wiring, and README.
+- Fixed MCP `memvid_put` input schema.
+- Added OpenSpec scaffolding.
+- Chinese tokenizer experiments/investigation and Tantivy search adjustments.
+- QA/clippy/fmt/doc/test cleanups and example tweaks.
+- Ignored nvim log noise in `.gitignore`; updated fork notes.
+
+Conflict resolution:
+- `Cargo.toml`: kept upstream `search_precision_benchmark` + `criterion` while retaining the `crates/memvid-mcp` workspace membership.
+
+## Rebase: upstream/main (7851bf2..428f1c4)
+Upstream summary:
+- Added SIMD acceleration for vector distance calculations, including the `simd` feature, new module, and `simd_benchmark` example.
+- Added Japanese README translation and linked it from the main README.
+
+Fork summary (7851bf2..970e318):
+- Added memvid MCP server crate, workspace wiring, and README.
+- Fixed MCP `memvid_put` input schema.
+- Added OpenSpec scaffolding.
+- Chinese tokenizer experiments/investigation and Tantivy search adjustments.
+- QA/clippy/fmt/doc updates and example tweaks.
+- Ignored nvim log noise in `.gitignore`; updated fork notes.
+
+Conflict resolution:
+- `Cargo.toml`: kept upstream `simd_benchmark` + `simd` feature while retaining the `crates/memvid-mcp` workspace membership.
+
 ## Rebase: upstream/main (8b9cd22..7851bf2)
 Upstream summary:
 - Hardened replay input/output handling with size limits, sanitization, and error sentinels for large payloads (V-002 fix).
