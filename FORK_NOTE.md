@@ -15,7 +15,7 @@ Fork summary (7851bf2..7755eb6):
 - Ignored nvim log noise in `.gitignore`; updated fork notes.
 
 Conflict resolution:
-- `Cargo.toml`: kept upstream `search_precision_benchmark` + `criterion` while retaining the `crates/memvid-mcp` workspace membership.
+- `Cargo.toml`: kept upstream `search_precision_benchmark` + `criterion` while retaining the `crates/memvid-mcp` workspace membership (single workspace section at top).
 
 ## Rebase: upstream/main (7851bf2..428f1c4)
 Upstream summary:
