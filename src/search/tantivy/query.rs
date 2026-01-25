@@ -177,7 +177,7 @@ impl QueryPlanner<'_> {
         }
 
         let mut tokens = self.engine.analyse_text(word);
-        tokens.retain(|token| token.chars().any(|c| c.is_alphanumeric()));
+        tokens.retain(|token| token.chars().any(char::is_alphanumeric));
         if tokens.is_empty() {
             // Word produced no tokens after analysis - match all instead of erroring
             // This can happen with punctuation-only or stop-word-only terms

@@ -1,5 +1,40 @@
 # Fork Notes
 
+## Rebase: upstream/main (37df42f..c26911b)
+Upstream summary:
+- Implemented HNSW vector search with fixed-point distance metric and benchmarks.
+- Added API embedding providers (OpenAI) and the `api_embed` feature with reqwest.
+- Added LRU eviction for extraction cache and related fixes.
+- Clippy safety overhaul: reduced unwrap/expect usage and tightened linting.
+- Added translation tooling and refreshed README translations (Arabic, Czech, Spanish, etc.).
+
+Fork summary (37df42f..cc0193b):
+- Added memvid MCP server crate + workspace wiring; fixed MCP schema; doc updates.
+- Added OpenSpec scaffolding plus Chinese tokenizer experiments and example tweaks.
+- QA/clippy/fmt cleanups, justfile additions, and build unblocks.
+- Ignored local nvim log noise in `.gitignore`; updated fork notes.
+
+Conflict resolution:
+- `Cargo.toml`: kept upstream HNSW bench additions while retaining `crates/memvid-mcp` workspace (single top-level `[workspace]`).
+- `src/lib.rs`: preserved upstream clippy lint configuration and allow list.
+- `tests/*.rs`: kept fork clippy formatting cleanups (assert formatting, removed stale comments).
+
+## Rebase: upstream/main (ee1bebd..37df42f)
+Upstream summary:
+- Added Whisper model quantization support with updated README guidance and `src/whisper.rs` handling.
+- Fixed Whisper/rubato 1.0 compatibility in the audio pipeline.
+
+Fork summary (ee1bebd..a9f55fe):
+- Added memvid MCP server crate, workspace wiring, and README.
+- Fixed MCP `memvid_put` input schema.
+- Added OpenSpec scaffolding.
+- Chinese tokenizer experiments/investigation and Tantivy search adjustments.
+- QA/clippy/fmt/doc/test cleanups and example tweaks.
+- Ignored nvim log noise in `.gitignore`; updated fork notes.
+
+Conflict resolution:
+- None (rebase applied cleanly).
+
 ## Rebase: upstream/main (7851bf2..ee1bebd)
 Upstream summary:
 - Added SIMD acceleration for vector distance calculations (`simd` feature + `simd_benchmark`).
