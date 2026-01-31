@@ -1,5 +1,21 @@
 # Fork Notes
 
+## Rebase: upstream/main (c26911b..df8723a)
+Upstream summary:
+- Released v2.0.135; committed Cargo.lock and updated CI cache keys for reproducible builds.
+- Enforced vector index model consistency with strict binding checks and related fmt/clippy fixes.
+- Fixed symspell_cleanup data corruption and added dictionary download tooling.
+- Added macOS ONNX Runtime stderr suppression (new libc target dep) and guarded tantivy code behind `lex`.
+- Added Windows Tantivy file-locking test delays.
+
+Fork summary (c26911b..1e59794):
+- Added memvid MCP server crate and schema fix; documentation updates.
+- Added OpenSpec scaffolding and Chinese tokenizer recall experiments with Tantivy adjustments + example.
+- QA/clippy/fmt cleanups and post-rebase maintenance; ignored nvim log noise; updated fork notes.
+
+Conflict resolution:
+- `Cargo.toml`: kept upstream version bump + macOS libc target deps + target-specific deps ordering; retained `tantivy-jieba` + lex feature wiring for Chinese tokenizer experiments.
+
 ## Rebase: upstream/main (37df42f..c26911b)
 Upstream summary:
 - Implemented HNSW vector search with fixed-point distance metric and benchmarks.
