@@ -1,5 +1,15 @@
 # Fork Notes
 
+## Rebase check: upstream/main (df8723a..df8723a)
+Upstream summary:
+- No new upstream commits; `git fetch upstream` and `git rebase upstream/main` reported the branch is up to date.
+
+Fork summary (df8723a..d0c4858):
+- No new fork changes required for this check; head remains on the existing fork commits.
+
+Conflict resolution:
+- None (no rebase performed).
+
 ## Rebase: upstream/main (c26911b..df8723a)
 Upstream summary:
 - Released v2.0.135; committed Cargo.lock and updated CI cache keys for reproducible builds.
