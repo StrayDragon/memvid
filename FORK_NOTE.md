@@ -4,10 +4,11 @@
 Upstream summary:
 - No new upstream commits; `git fetch upstream` and `git rebase upstream/main` reported the branch is up to date.
 
-Fork summary (df8723a..5db20e2):
+Fork summary (df8723a..48b4d6b):
 - Added memvid MCP server crate + workspace wiring and fixed MCP schema.
 - Added OpenSpec scaffolding and Chinese tokenizer experiments with Tantivy adjustments + example.
 - QA/clippy/fmt/doc/test cleanups, post-rebase maintenance, and `.gitignore` noise ignores; updated fork notes.
+- Updated fork notes after rebase checks.
 
 Conflict resolution:
 - None (no rebase performed).
