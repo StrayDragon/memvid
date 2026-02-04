@@ -1,5 +1,20 @@
 # Fork Notes
 
+## Rebase: upstream/main (df8723a..3864ee8)
+Upstream summary:
+- Refreshed README header layout and spacing, replacing the language flags block with a Trendshift badge.
+- Added a "Benchmark Highlights" section with accuracy/latency claims and benchmark context.
+- Cleaned up README separators and minor formatting/spacing.
+
+Fork summary (df8723a..e2ad7e6):
+- Added memvid MCP server crate + workspace wiring and schema fix; updated docs.
+- Added OpenSpec scaffolding/commands and project notes.
+- Chinese tokenizer recall experiments and Tantivy search adjustments with example updates.
+- QA/clippy/fmt/test cleanups and `.gitignore` noise ignore; updated fork notes.
+
+Conflict resolution:
+- None (rebase applied cleanly).
+
 ## Rebase check: upstream/main (df8723a..df8723a)
 Upstream summary:
 - No new upstream commits; `git fetch upstream` and `git rebase upstream/main` reported the branch is up to date.
