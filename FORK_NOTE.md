@@ -1,5 +1,18 @@
 # Fork Notes
 
+## Rebase: upstream/main (3864ee8..38cdd32)
+Upstream summary:
+- Added a Memvid v1 deprecation warning to the README (with a docs link).
+- Moved the deprecation warning to the bottom of the README and refreshed formatting.
+- Minor README tweak.
+
+Fork summary (3864ee8..87be2ed):
+- No functional changes required for this upstream update (README-only).
+- Fork still carries: memvid MCP server crate/workspace wiring + schema fix; OpenSpec scaffolding; Chinese tokenizer recall experiments + Tantivy adjustments; QA/clippy/fmt/doc/test maintenance.
+
+Conflict resolution:
+- None (rebase applied cleanly).
+
 ## Rebase: upstream/main (df8723a..3864ee8)
 Upstream summary:
 - Refreshed README header layout and spacing, replacing the language flags block with a Trendshift badge.
