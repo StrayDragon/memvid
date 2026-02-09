@@ -1,5 +1,31 @@
 # Fork Notes
 
+## Rebase: upstream/main (38cdd32..d7a2657)
+Upstream summary:
+- Released `v2.0.136` (`4e04ed8`) with frame-level ACL plumbing across search/ask/replay, plus robustness fixes and expanded test/example coverage.
+- Follow-up lint fixes (`c84da0b`, `f807534`) adjusted ACL/mutation internals and added a missing `VecIndexManifest` model field.
+- Added Simplified Chinese translation doc `docs/i18n/README.zh-CN.md` (`a40dbf3`, merged by `d7a2657`).
+
+Fork summary (38cdd32..ebd4b8f):
+- Added fork-only MCP server crate (`crates/memvid-mcp`) and workspace wiring in `Cargo.toml`, with MCP schema fix for `memvid_put`.
+- Added OpenSpec scaffolding and local automation docs/commands (`openspec/`, `.claude/commands/`, `.cursor/commands/`).
+- Added Chinese recall experiments: `examples/chinese_recall.rs`, Tantivy CJK tokenizer wiring (`tantivy-jieba`), and query path adjustments in `src/search/tantivy/*`.
+- Continued maintenance-only commits: QA/fmt/clippy cleanups, post-rebase maintenance, and iterative `FORK_NOTE.md` updates.
+
+Potential conflict hotspots identified before rebase:
+- `Cargo.toml`: upstream version bump to `2.0.136` vs fork workspace + `tantivy-jieba` + `lex` feature wiring.
+- `examples/basic_usage.rs` and `examples/pdf_ingestion.rs`: upstream ACL request fields vs fork clippy-allow annotations.
+- `src/memvid/search/mod.rs`: upstream ACL enforcement in search path vs fork CJK sketch-bypass condition.
+- `.gitignore`: upstream ignores `feature_100x_memvid.md` while fork ignores `.nvimlog`.
+
+Conflict resolution:
+- None (rebase applied cleanly without manual conflict stops).
+- Verified post-rebase merge intent on anticipated hotspots:
+  - `Cargo.toml`: kept upstream `2.0.136` while retaining fork workspace + `tantivy-jieba` lex wiring.
+  - `examples/basic_usage.rs` / `examples/pdf_ingestion.rs`: retained fork clippy allow and upstream ACL request fields.
+  - `src/memvid/search/mod.rs`: preserved both upstream ACL enforcement and fork CJK sketch bypass.
+  - `.gitignore`: includes both upstream `feature_100x_memvid.md` and fork `.nvimlog` ignore.
+
 ## Rebase: upstream/main (3864ee8..38cdd32)
 Upstream summary:
 - Added a Memvid v1 deprecation warning to the README (with a docs link).
