@@ -168,3 +168,14 @@ harness = false
 name = "vec_search_benchmark"
 harness = false
 required-features = ["hnsw_bench"]
+
+# Disk-usage friendly debug builds:
+# - Keep full debug info for workspace crates (memvid-*).
+# - Disable debuginfo for dependencies to drastically shrink `target/` and speed linking.
+#
+# See Cargo profiles docs: https://doc.rust-lang.org/cargo/reference/profiles.html
+[profile.dev.package."*"]
+debug = 0
+
+[profile.test.package."*"]
+debug = 0
