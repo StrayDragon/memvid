@@ -7,6 +7,9 @@ default:
 
 qa: build-ci test-ci fmt-check clippy
 
+clean-all:
+	cargo clean
+
 build-ci:
 	cargo build --verbose
 
