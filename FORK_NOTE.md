@@ -1,5 +1,27 @@
 # Fork Notes
 
+## Rebase: upstream/main (8d8addb..7be69c6)
+Upstream summary:
+- Released `v2.0.157` (`7be69c6`) and bumped `memvid-core` to `2.0.137`.
+- Added structured XLSX extraction (table detection, OOXML metadata parsing, semantic chunking) and wired it into `XlsxReader` (`97f68b2`, `7511889`), with new reader modules and `tests/xlsx_structured.rs`.
+- Follow-up fmt/lint fixes (`64bbd32`, `223b93d`) and made structured XLSX tests skip when the `arden.xlsx` fixture is absent (`7be69c6`, CI robustness).
+
+Fork summary (8d8addb..ffbb3ae):
+- Added fork-only MCP server crate (`crates/memvid-mcp`) for CRUD workflows against `.mv2` files via stdio transport.
+- Added Chinese recall experiments: `examples/chinese_recall.rs`, Tantivy Jieba tokenizer wiring (`tantivy-jieba`), and query/search-path adjustments (e.g. disable sketch pre-filter for CJK).
+- Added OpenSpec scaffolding and editor commands (`openspec/`, `.claude/commands/`, `.cursor/commands/`), plus ongoing QA/fmt/clippy maintenance.
+- Optimized local build disk usage by disabling dependency debuginfo in dev/test profiles (`Cargo.toml`), and ignored `.nvimlog`.
+
+Potential conflict hotspots identified before rebase:
+- `Cargo.toml`: upstream version bump + fork workspace + `tantivy-jieba` / `lex` feature wiring + profile tweaks.
+- `.gitignore`: upstream doc ignores vs fork `.nvimlog`.
+
+Conflict resolution:
+- None (rebase applied cleanly without manual conflict stops).
+- Verified post-rebase merge intent on anticipated hotspots:
+  - `Cargo.toml`: kept upstream `2.0.137` while retaining fork workspace + `tantivy-jieba` lex wiring + debug-size profiles.
+  - `.gitignore`: includes both upstream `plan_model_robust.md` and fork `.nvimlog` ignore.
+
 ## Rebase: upstream/main (38cdd32..d7a2657)
 Upstream summary:
 - Released `v2.0.136` (`4e04ed8`) with frame-level ACL plumbing across search/ask/replay, plus robustness fixes and expanded test/example coverage.
