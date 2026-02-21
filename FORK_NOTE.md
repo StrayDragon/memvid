@@ -1,5 +1,19 @@
 # Fork Notes
 
+## Rebase check: upstream/main (7be69c6..7be69c6)
+Upstream summary:
+- No new upstream commits since `v2.0.157` (`7be69c6`); `git fetch upstream` and `git rebase upstream/main` report the branch is up to date.
+
+Fork summary (7be69c6..70bf39e):
+- Added fork-only MCP server crate (`crates/memvid-mcp`) for CRUD workflows against `.mv2` files via stdio transport.
+- Added Chinese recall experiments: `examples/chinese_recall.rs`, Tantivy Jieba tokenizer wiring (`tantivy-jieba`), and query/search-path adjustments (e.g. disable sketch pre-filter for CJK).
+- Added OpenSpec scaffolding and editor commands (`openspec/`, `.claude/commands/`, `.cursor/commands/`), plus ongoing QA/fmt/clippy maintenance.
+- Optimized local build disk usage by disabling dependency debuginfo in dev/test profiles (`Cargo.toml`), and ignored `.nvimlog`.
+- Continued fork maintenance: periodic upstream rebase commits and iterative `FORK_NOTE.md` updates.
+
+Conflict resolution:
+- None (no rebase performed).
+
 ## Rebase: upstream/main (8d8addb..7be69c6)
 Upstream summary:
 - Released `v2.0.157` (`7be69c6`) and bumped `memvid-core` to `2.0.137`.
