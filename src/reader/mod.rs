@@ -4,10 +4,15 @@ mod docx;
 mod passthrough;
 mod pdf;
 mod pptx;
+#[cfg(feature = "excel")]
 mod xls;
+#[cfg(feature = "excel")]
 mod xlsx;
+#[cfg(feature = "excel")]
 pub(crate) mod xlsx_chunker;
+#[cfg(feature = "excel")]
 pub(crate) mod xlsx_ooxml;
+#[cfg(feature = "excel")]
 pub(crate) mod xlsx_table_detect;
 
 use serde_json::Value;
@@ -16,9 +21,13 @@ pub use docx::DocxReader;
 pub use passthrough::PassthroughReader;
 pub use pdf::PdfReader;
 pub use pptx::PptxReader;
+#[cfg(feature = "excel")]
 pub use xls::XlsReader;
+#[cfg(feature = "excel")]
 pub use xlsx::{XlsxReader, XlsxStructuredDiagnostics, XlsxStructuredResult};
+#[cfg(feature = "excel")]
 pub use xlsx_chunker::XlsxChunkingOptions;
+#[cfg(feature = "excel")]
 pub use xlsx_table_detect::DetectedTable;
 
 use crate::{ExtractedDocument, Result};
@@ -211,8 +220,11 @@ impl Default for ReaderRegistry {
         let mut registry = Self::new();
         registry.register(PdfReader);
         registry.register(DocxReader);
-        registry.register(XlsxReader);
-        registry.register(XlsReader);
+        #[cfg(feature = "excel")]
+        {
+            registry.register(XlsxReader);
+            registry.register(XlsReader);
+        }
         registry.register(PptxReader);
         registry.register(PassthroughReader);
         registry

@@ -184,8 +184,12 @@ pub use models::{
     ModelVerifyOptions, verify_model_dir, verify_models,
 };
 pub use reader::{
-    DetectedTable, DocumentFormat, DocumentReader, PassthroughReader, PdfReader, ReaderDiagnostics,
-    ReaderHint, ReaderOutput, ReaderRegistry, XlsxChunkingOptions, XlsxReader,
+    DocumentFormat, DocumentReader, PassthroughReader, PdfReader, ReaderDiagnostics, ReaderHint,
+    ReaderOutput, ReaderRegistry,
+};
+#[cfg(feature = "excel")]
+pub use reader::{
+    DetectedTable, XlsxChunkingOptions, XlsxReader, XlsxStructuredDiagnostics, XlsxStructuredResult,
 };
 pub use signature::{
     parse_ed25519_public_key_base64, verify_model_manifest, verify_ticket_signature,
