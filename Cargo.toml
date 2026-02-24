@@ -40,7 +40,7 @@ regex = "1.11.1"
 time = { version = "0.3.36", features = ["formatting", "parsing"] }
 chrono = { version = "0.4.42", features = ["serde"] }
 interim = { version = "0.2.1", optional = true }
-lopdf = "0.39"
+lopdf = { version = "0.39", optional = true }
 # Pure Rust PDF text extraction - used as primary extractor when extractous is disabled
 pdf-extract = { version = "0.10", optional = true }
 # High-accuracy PDF text extraction with perfect word spacing (2025)
@@ -103,18 +103,20 @@ reqwest = { version = "0.12", optional = true, default-features = false, feature
 libc = "0.2"
 
 [features]
-default = ["lex", "pdf_extract", "simd", "excel"]
+default = ["lex", "pdf_extract", "pdf_lopdf", "simd", "excel"]
 # pdf_oxide disabled - cff-parser panics on ligature fonts (uniFB01/uniFB02)
 # symspell_cleanup - enables robust PDF text repair (requires `make download-models` for dictionaries)
 lex = ["dep:tantivy", "dep:tantivy-jieba"]
 excel = ["dep:calamine"]
-extractous = ["dep:extractous"]
+extractous = ["dep:extractous", "pdf_lopdf"]
 # Pure Rust PDF extraction - faster than lopdf for text extraction, cross-platform
-pdf_extract = ["dep:pdf-extract"]
+pdf_extract = ["dep:pdf-extract", "pdf_lopdf"]
+# lopdf-based PDF extraction fallback (feature-gated to keep minimal builds lean)
+pdf_lopdf = ["dep:lopdf"]
 # High-accuracy PDF extraction with perfect word spacing (recommended for 2025+)
-pdf_oxide = ["dep:pdf_oxide"]
+pdf_oxide = ["dep:pdf_oxide", "pdf_lopdf"]
 vec = ["dep:ort", "dep:hnsw", "dep:ndarray", "dep:tokenizers", "dep:space", "dep:rand", "dep:rand_pcg"]
-clip = ["vec", "dep:image", "dep:ndarray", "dep:rayon", "dep:tokenizers"]
+clip = ["vec", "dep:image", "dep:ndarray", "dep:rayon", "dep:tokenizers", "pdf_lopdf"]
 mmap = []
 pdfium = ["dep:pdfium-render"]
 temporal_track = []

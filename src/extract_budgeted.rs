@@ -6,7 +6,6 @@
 
 use std::time::{Duration, Instant};
 
-use lopdf::Document as LopdfDocument;
 use serde::{Deserialize, Serialize};
 
 use crate::error::{MemvidError, Result};
@@ -219,11 +218,14 @@ fn truncate_at_boundary(text: &str, max_chars: usize) -> String {
 }
 
 /// lopdf-based per-page extraction (slower but works as fallback)
+#[cfg(feature = "pdf_lopdf")]
 fn extract_pdf_budgeted_lopdf(
     bytes: &[u8],
     budget: ExtractionBudget,
     start: Instant,
 ) -> Result<BudgetedExtractionResult> {
+    use lopdf::Document as LopdfDocument;
+
     let deadline = start + budget.budget;
 
     // Load PDF
@@ -323,6 +325,17 @@ fn extract_pdf_budgeted_lopdf(
     // If we got here, we extracted all sampled pages without hitting limits
     let completed = extracted_pages.len() >= page_count;
     finish_extraction(extracted_pages, page_count, start, completed)
+}
+
+#[cfg(not(feature = "pdf_lopdf"))]
+fn extract_pdf_budgeted_lopdf(
+    _bytes: &[u8],
+    _budget: ExtractionBudget,
+    _start: Instant,
+) -> Result<BudgetedExtractionResult> {
+    Err(MemvidError::ExtractionFailed {
+        reason: "lopdf PDF extraction is disabled (enable feature `pdf_lopdf`)".into(),
+    })
 }
 
 /// Extract text from plain text/markdown with time budget.
