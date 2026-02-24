@@ -10,7 +10,6 @@ use crate::text::fix_pdf_spacing;
 
 #[cfg(feature = "extractous")]
 use log::LevelFilter;
-use lopdf::Document as LopdfDocument;
 use serde_json::{Value, json};
 
 #[cfg(feature = "extractous")]
@@ -464,8 +463,10 @@ const PDF_FALLBACK_MAX_BYTES: usize = 64 * 1024 * 1024; // 64 MiB hard cap.
 #[cfg(feature = "extractous")]
 const PDF_FALLBACK_MAX_PAGES: usize = 4_096;
 
-#[cfg(feature = "extractous")]
+#[cfg(all(feature = "extractous", feature = "pdf_lopdf"))]
 fn pdf_text_fallback(bytes: &[u8]) -> Result<Option<String>> {
+    use lopdf::Document as LopdfDocument;
+
     if !is_probably_pdf(bytes) {
         return Ok(None);
     }
@@ -528,6 +529,11 @@ fn pdf_text_fallback(bytes: &[u8]) -> Result<Option<String>> {
             reason: format!("pdf fallback failed to extract text: {err}").into(),
         }),
     }
+}
+
+#[cfg(all(feature = "extractous", not(feature = "pdf_lopdf")))]
+fn pdf_text_fallback(_bytes: &[u8]) -> Result<Option<String>> {
+    Ok(None)
 }
 
 #[cfg(feature = "extractous")]
@@ -856,7 +862,10 @@ fn is_probably_pdf_simple(bytes: &[u8]) -> bool {
 
 /// Extract text from a PDF using lopdf (pure Rust, no external dependencies)
 #[allow(dead_code)]
+#[cfg(feature = "pdf_lopdf")]
 fn pdf_text_extract_lopdf(bytes: &[u8]) -> Result<Option<String>> {
+    use lopdf::Document as LopdfDocument;
+
     if bytes.len() > PDF_LOPDF_MAX_BYTES {
         return Err(MemvidError::ExtractionFailed {
             reason: format!(
@@ -913,6 +922,12 @@ fn pdf_text_extract_lopdf(bytes: &[u8]) -> Result<Option<String>> {
             reason: format!("failed to extract text from PDF: {err}").into(),
         }),
     }
+}
+
+#[cfg(not(feature = "pdf_lopdf"))]
+#[allow(dead_code)]
+fn pdf_text_extract_lopdf(_bytes: &[u8]) -> Result<Option<String>> {
+    Ok(None)
 }
 
 #[cfg(all(test, feature = "extractous"))]

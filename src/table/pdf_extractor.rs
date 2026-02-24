@@ -644,6 +644,7 @@ fn extract_line_based_tables(
 }
 
 /// Extract raw text from PDF bytes using lopdf.
+#[cfg(feature = "pdf_lopdf")]
 fn extract_raw_text(bytes: &[u8]) -> Option<String> {
     use lopdf::Document;
 
@@ -663,6 +664,11 @@ fn extract_raw_text(bytes: &[u8]) -> Option<String> {
     } else {
         Some(all_text)
     }
+}
+
+#[cfg(not(feature = "pdf_lopdf"))]
+fn extract_raw_text(_bytes: &[u8]) -> Option<String> {
+    None
 }
 
 /// Detect table regions from line patterns.

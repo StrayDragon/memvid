@@ -302,7 +302,7 @@ fn extract_lines_from_path(
 /// This provides basic text extraction with whitespace-based column detection.
 /// While not as accurate as pdfium's native text positioning, it can still
 /// detect tables with consistent column alignment.
-#[cfg(not(feature = "pdfium"))]
+#[cfg(all(not(feature = "pdfium"), feature = "pdf_lopdf"))]
 pub fn extract_pdf_layout(bytes: &[u8], max_pages: usize) -> Result<Vec<PageLayout>> {
     use lopdf::Document;
 
@@ -363,6 +363,13 @@ pub fn extract_pdf_layout(bytes: &[u8], max_pages: usize) -> Result<Vec<PageLayo
     }
 
     Ok(layouts)
+}
+
+#[cfg(all(not(feature = "pdfium"), not(feature = "pdf_lopdf")))]
+pub fn extract_pdf_layout(_bytes: &[u8], _max_pages: usize) -> Result<Vec<PageLayout>> {
+    Err(MemvidError::TableExtraction {
+        reason: "pdf layout extraction requires feature `pdf_lopdf` (or enable `pdfium`)".into(),
+    })
 }
 
 /// Parse a line into separate text boxes based on whitespace patterns.
@@ -449,7 +456,7 @@ fn parse_line_into_columns(
 }
 
 /// Get page dimensions from a lopdf document.
-#[cfg(not(feature = "pdfium"))]
+#[cfg(all(not(feature = "pdfium"), feature = "pdf_lopdf"))]
 fn get_page_dimensions(document: &lopdf::Document, page_idx: usize) -> Option<(f32, f32)> {
     let pages = document.get_pages();
     let page_id = *pages.get(&u32::try_from(page_idx + 1).unwrap_or(0))?;
