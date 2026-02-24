@@ -49,7 +49,7 @@ unicode-normalization = "0.1"
 unicode-segmentation = "1.11"
 zip = { version = "7.1", default-features = false, features = ["deflate"] }
 quick-xml = "0.31"
-calamine = "0.22"
+calamine = { version = "0.22", optional = true }
 pdfium-render = { version = "0.8.28", optional = true }
 tempfile = "3.10.1"
 num_cpus = { version = "1.17", optional = true }
@@ -103,10 +103,11 @@ reqwest = { version = "0.12", optional = true, default-features = false, feature
 libc = "0.2"
 
 [features]
-default = ["lex", "pdf_extract", "simd"]
+default = ["lex", "pdf_extract", "simd", "excel"]
 # pdf_oxide disabled - cff-parser panics on ligature fonts (uniFB01/uniFB02)
 # symspell_cleanup - enables robust PDF text repair (requires `make download-models` for dictionaries)
 lex = ["dep:tantivy", "dep:tantivy-jieba"]
+excel = ["dep:calamine"]
 extractous = ["dep:extractous"]
 # Pure Rust PDF extraction - faster than lopdf for text extraction, cross-platform
 pdf_extract = ["dep:pdf-extract"]

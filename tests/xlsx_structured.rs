@@ -1,3 +1,5 @@
+#![cfg(feature = "excel")]
+
 //! Integration tests for the structured XLSX extraction pipeline.
 //!
 //! Uses `/Users/olow/Desktop/memvid-org/arden.xlsx` — a real-world 1.7 MB
