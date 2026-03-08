@@ -1,5 +1,40 @@
 # Fork Notes
 
+## Rebase: upstream/main (7be69c6..e35546f)
+Upstream summary:
+- Upstream advanced by one commit after `v2.0.157`: `e35546f` (`fix: expose lex_enabled/vec_enabled in stats and auto-detect vec on reopen, gracefully skip out-of-range frame ids in timeline`).
+- The upstream patch touches lex/tantivy lifecycle and stats plumbing in `src/memvid/search/api.rs`, `src/memvid/search/mod.rs`, `src/memvid/mutation.rs`, `src/memvid/ticket.rs`, `src/memvid/timeline.rs`, `src/types/frame.rs`, and adds regression coverage in `src/tests_lex_flag.rs`.
+- Behaviorally, upstream now restores `lex_enabled` during failed mutation rollbacks, lazy-initializes Tantivy on already-lex-enabled instances, exposes `lex_enabled`/`vec_enabled` in stats output, auto-detects vector indexes on reopen, and skips out-of-range child frame ids when rendering timelines.
+
+Fork summary (7be69c6..64f1f28):
+- Retained the fork-only MCP workspace crate `crates/memvid-mcp` plus top-level workspace wiring in `Cargo.toml`.
+- Retained Chinese recall experimentation: `examples/chinese_recall.rs`, `tantivy-jieba` integration, query/schema adjustments under `src/search/tantivy/`, and the CJK-aware sketch bypass in `src/memvid/search/mod.rs`.
+- Retained dependency/feature gating to keep heavier paths optional: `lopdf` via `pdf_lopdf`, `calamine` via `excel`, and corresponding reader/extractor gating.
+- Retained local automation/project scaffolding (`openspec/`, `.claude/commands/`, `.cursor/commands/`, `justfile`) and the target-size profile tuning / `.nvimlog` ignore maintenance.
+
+Potential conflict hotspots identified before rebase:
+- `src/memvid/search/api.rs` and `src/memvid/search/mod.rs`: upstream Tantivy re-init fix vs fork CJK search-path adjustments.
+- `src/memvid/mutation.rs`, `src/memvid/ticket.rs`, `src/memvid/timeline.rs`, `src/types/frame.rs`, `src/tests_lex_flag.rs`: upstream-only behavioral/test changes that need to be preserved while replaying fork commits.
+- `Cargo.toml` / `Cargo.lock`: fork-only workspace + feature gating + `tantivy-jieba` wiring must remain compatible after replaying onto the new upstream base.
+
+Conflict resolution:
+- `git rebase upstream/main` applied cleanly with no manual conflict stops.
+- Re-applied the in-progress analysis notes from a temporary stash after the rebase completed.
+- Verified the merged intent on the pre-identified hotspots:
+  - `src/memvid/search/api.rs` / `src/memvid/search/mod.rs`: upstream Tantivy lazy-init fix is present and the fork’s CJK sketch bypass remains intact.
+  - `src/memvid/mutation.rs`, `src/memvid/ticket.rs`, `src/memvid/timeline.rs`, `src/types/frame.rs`, `src/tests_lex_flag.rs`: upstream rollback/stats/timeline/test fixes are present after replay.
+  - `Cargo.toml`: still carries the fork workspace, `tantivy-jieba`, `pdf_lopdf`, `excel`, and debug-size profile overrides.
+- Post-rebase validation required small follow-up fixes only:
+  - Applied `rustfmt`-driven ordering/wrapping updates in `src/lib.rs`, `src/memvid/search/api.rs`, `src/memvid/timeline.rs`, and `src/tests_lex_flag.rs`.
+  - Rewrote a new upstream `match` in `src/memvid/timeline.rs` to `if let` so `cargo clippy -D warnings` passes under the repository’s pedantic lint policy.
+
+Validation:
+- `just qa`: PASS (build, tests, doc-tests, fmt-check, clippy).
+- Example runs completed locally:
+  - PASS: `basic_usage`, `chinese_recall`, `generate_performance_report`, `simd_benchmark`, `test_implicit_or_bug`, `pdf_ingestion` (using a generated local sample PDF), `clip_visual_search` fallback path, `test_whisper` fallback path.
+  - SAFE-FAIL as expected: `openai_embedding` with `api_embed` enabled but `OPENAI_API_KEY` intentionally unset exits early before any API call.
+  - BLOCKED by missing local model artifact: `text_embedding` and `text_embed_cache_bench` both compile with `--features vec` but stop with the documented missing `bge-small-en-v1.5.onnx` error. Attempted model download from Hugging Face, but the download stalled in the current network environment.
+
 ## Rebase check: upstream/main (7be69c6..7be69c6)
 Upstream summary:
 - No new upstream commits since `v2.0.157` (`7be69c6`); `git fetch upstream` and `git rebase upstream/main` report the branch is up to date.
